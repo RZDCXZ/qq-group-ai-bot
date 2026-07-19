@@ -1,0 +1,38 @@
+{
+  "name": "qq-group-ai-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "QQ 群聊 AI 机器人，通过 NapCat/OneBot 连接普通 QQ 小号，并由本机 Codex 提供聊天、搜索、识图和图片生成能力。",
+  "type": "module",
+  "packageManager": "pnpm@11.13.0",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "status": "node scripts/macos/manage-bot.mjs status",
+    "stop": "node scripts/macos/manage-bot.mjs stop",
+    "restart": "node scripts/macos/manage-bot.mjs restart",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "qq:start-napcat:macos": "scripts/macos/start-napcat.sh",
+    "qq:verify-macos": "node scripts/macos/verify-qq-launchers.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@tencent-connect/qqbot-nodejs": "^1.0.4",
+    "dotenv": "^17.4.2",
+    "openai": "^6.48.0",
+    "ws": "^8.21.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
