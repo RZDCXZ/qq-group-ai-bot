@@ -95,7 +95,9 @@ pnpm build
 pnpm qq:verify-macos
 ```
 
-- `pnpm start` 运行的是 `dist/index.js`，代码修改后必须先构建并重启，不能只改 `src/`。
+- `pnpm start` 运行的是 `dist/index.js`；macOS 合盖长期运行可用
+  `pnpm start:awake`（内部执行 `caffeinate -i pnpm start`）。代码修改后必须先构建
+  并重启，不能只改 `src/`。
 - 使用 `pnpm status`、`pnpm stop`、`pnpm restart` 管理 Node 机器人；`pnpm stop` 只停止 AI 回复，不停止普通 QQ 或 NapCat 小号。
 - 重启会清空内存中的对话历史，这是当前设计，不是数据丢失故障。
 

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
+    "start:awake": "caffeinate -i pnpm start",
     "status": "node scripts/macos/manage-bot.mjs status",
     "stop": "node scripts/macos/manage-bot.mjs stop",
     "restart": "node scripts/macos/manage-bot.mjs restart",

@@ -237,6 +237,15 @@ pnpm build
 pnpm start
 ```
 
+macOS 使用外接显示器合盖长期运行时，改用：
+
+```bash
+pnpm start:awake
+```
+
+该命令会执行 `caffeinate -i pnpm start`，在机器人进程存活期间阻止空闲睡眠；
+外接显示器、键鼠和电源仍需保持连接。
+
 开发时可用：
 
 ```bash
@@ -252,8 +261,8 @@ pnpm restart  # 安全重启并继续在当前终端运行
 ```
 
 这些命令只匹配本项目工作目录中的 `node dist/index.js`，不会关闭普通 QQ、
-NapCat 小号或其他项目的 Node 服务。`pnpm start` 和 `pnpm restart` 一样需要保持
-当前终端运行；按 `Control + C` 也可以停止。
+NapCat 小号或其他项目的 Node 服务。`pnpm start`、`pnpm start:awake` 和
+`pnpm restart` 都需要保持当前终端运行；按 `Control + C` 也可以停止。
 
 日志出现 `已连接 NapCat WebSocket` 和 `机器人已就绪` 后，先用白名单中的
 主账号私聊专用小号：

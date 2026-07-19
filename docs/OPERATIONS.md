@@ -175,6 +175,15 @@ codex login status
 pnpm start
 ```
 
+macOS 使用外接显示器合盖长期运行时，使用防止空闲睡眠的启动命令：
+
+```bash
+pnpm start:awake
+```
+
+该脚本等价于 `caffeinate -i pnpm start`。电源、外接显示器和外接键鼠仍需保持
+连接，当前终端也必须持续运行。
+
 成功日志应同时包含：
 
 ```text
