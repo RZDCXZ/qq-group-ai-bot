@@ -86,10 +86,15 @@ OneBot Token 不是 WebUI 登录密码：铃铃酱的 `.env.local` 中
 cd /Users/why/code/my-project/qq-bots
 pnpm start
 pnpm status
+pnpm restart:core
 pnpm restart
 pnpm stop
 pnpm bots:login
 ```
+
+日常修改业务配置或代码后优先使用 `pnpm restart:core`。它只重建麦麦和铃铃酱的
+业务核心，两个 NapCat 容器和 QQ 登录进程保持不动。`pnpm restart` 会重建整套容器，
+仅在 NapCat 本身也需要重建时使用。
 
 `pnpm status`/`pnpm bots:status` 会先显示四个 Compose 容器，再分别通过 OneBot
 `get_status` 输出麦麦和铃铃酱的真实 QQ 连接状态。即使 NapCat 容器仍在运行，
@@ -104,13 +109,14 @@ QQ 登录态失效也会显示为离线；探针不会输出 OneBot Token。
 cd /Users/why/code/my-project/qq-bots/lingling-bot
 pnpm bots:start
 pnpm bots:status
+pnpm bots:restart:core
 pnpm bots:restart
 pnpm bots:stop
 ```
 
 这些命令要求 MaiBot 位于同级目录 `/Users/why/code/my-project/qq-bots/MaiBot`。`bots:start`
-先启动麦麦，再构建并启动铃铃酱；`bots:stop` 对两套 Compose 执行 `down`，不会删除
-持久化数据。
+先启动麦麦，再构建并启动铃铃酱；`bots:restart:core` 只重建两个 `core` 服务并使用
+`--no-deps` 保持 NapCat 不动；`bots:stop` 对两套 Compose 执行 `down`，不会删除持久化数据。
 
 只管理铃铃酱：
 
@@ -119,6 +125,7 @@ pnpm docker:start
 pnpm docker:status
 pnpm docker:logs
 pnpm docker:login
+pnpm docker:restart:core
 pnpm docker:restart
 pnpm docker:stop
 ```

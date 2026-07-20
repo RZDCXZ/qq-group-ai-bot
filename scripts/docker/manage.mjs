@@ -252,6 +252,19 @@ switch (action) {
     }
     runLingling("up", "-d", "--build");
     break;
+  case "restart-core":
+    if (allBots) {
+      runMaiBot("up", "-d", "--no-deps", "--force-recreate", "core");
+    }
+    runLingling(
+      "up",
+      "-d",
+      "--build",
+      "--no-deps",
+      "--force-recreate",
+      "core",
+    );
+    break;
   case "status":
     if (allBots) {
       printTitle("麦麦");
@@ -270,6 +283,6 @@ switch (action) {
     break;
   default:
     throw new Error(
-      `未知操作：${action}；可用值为 start、stop、restart、status、logs。`,
+      `未知操作：${action}；可用值为 start、stop、restart、restart-core、status、logs。`,
     );
 }
