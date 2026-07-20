@@ -13,7 +13,14 @@
 截至 2026-07-19，本项目已经完成并通过实机验收：
 
 - 使用普通 QQ 专用小号，通过 NapCat/OneBot 11 接入，不使用 QQ 开放平台群机器人。
-- macOS 上正常主号 QQ 与 NapCat 小号可以同时运行。
+- 当前推荐部署已切换为 Docker Compose：`lingling-bot-core` 与
+  `lingling-bot-napcat` 独立运行，NapCat WebUI 为本机 `17099`；macOS 原生
+  NapCat 双启动脚本只作为备用方案保留。
+- 麦麦与铃铃酱可在本项目中使用 `pnpm bots:start/status/stop` 一次管理；两套
+  Compose 使用不同容器、网络、账号和端口。
+- 两个项目的共同父目录是 `/Users/why/code/my-project/qq-bots/`；日常优先在父目录
+  使用 `pnpm start/status/restart/stop` 和 `pnpm bots:login`。`pnpm login` 属于 pnpm
+  内置命令，不是机器人登录命令。
 - AI 已切换为本机 Codex CLI，默认模型为 `gpt-5.6-luna`、推理深度为 `medium`；文字、实时搜索、识图和图片生成/编辑全部走 Codex。
 - 白名单好友私聊文字、图片均可正常回复。
 - 专用小号已经加入“杀鸡练习生测试”群，该群已进入白名单。
@@ -60,7 +67,8 @@
   和“首先/其次/综上所述”式大纲总结。语气应随话题变化，禁止连续套用高浓度
   可爱模板；允许有小偏好和不确定，但不得编造真实经历。
 - 不得让 NapCat 登录主 QQ，只能使用专用机器人小号。
-- 不得把 OneBot WebSocket 暴露到公网；保持监听 `127.0.0.1` 并启用 Token。
+- 不得把 OneBot WebSocket 暴露到公网。Docker 部署只在独立容器网络使用
+  `napcat:3001`；WebUI 只映射到宿主机 `127.0.0.1:17099`，并启用 Token。
 - 不要手工永久修改 QQ 安装包入口。macOS 双启动只能使用 `scripts/macos/` 下的脚本，它们会瞬时注入并自动恢复原版入口。
 - 不要误杀普通 QQ、NapCat 启动器或其他名为 `dist/index.js` 的 Node 服务；重启前必须核对 PID 和命令行。
 - 群聊必须保持群白名单；直接回复仍要求 `@机器人`，但用户已明确授权普通群消息
@@ -104,6 +112,9 @@ pnpm qq:verify-macos
   `pnpm start:awake`（内部执行 `caffeinate -i pnpm start`）。代码修改后必须先构建
   并重启，不能只改 `src/`。
 - 使用 `pnpm status`、`pnpm stop`、`pnpm restart` 管理 Node 机器人；`pnpm stop` 只停止 AI 回复，不停止普通 QQ 或 NapCat 小号。
+- 当前生产部署优先使用 `pnpm docker:start/status/logs/login/stop/restart`；需要一起管理
+  同级 MaiBot 时使用 `pnpm bots:start/status/stop/restart`。不要同时运行原生 Node
+  实例和 Docker 核心，否则会重复回复。
 - 重启会清空内存中的对话历史，这是当前设计，不是数据丢失故障。
 
 ## 代码导航
@@ -121,5 +132,7 @@ pnpm qq:verify-macos
 - `src/onebot/image-loader.ts`：QQ 图片读取、大小/格式/来源限制和 data URL 转换。
 - `src/ai/codex-cli-ai.ts`：受限 Codex 非交互调用、JSONL 结果解析和生成图片读取。
 - `scripts/macos/`：普通 QQ 与 NapCat 小号双启动及恢复保护。
+- `Dockerfile`、`compose.yaml`、`scripts/docker/`：铃铃酱完整容器部署及双机器人
+  一键管理。
 
 遇到运行问题先复现和读取日志，再按 `docs/OPERATIONS.md` 排查，不要先大范围改代码。

@@ -1,0 +1,16 @@
+{
+  "name": "qq-bots",
+  "private": true,
+  "packageManager": "pnpm@11.13.0",
+  "scripts": {
+    "start": "pnpm --dir lingling-bot bots:start",
+    "stop": "pnpm --dir lingling-bot bots:stop",
+    "restart": "pnpm --dir lingling-bot bots:restart",
+    "status": "pnpm --dir lingling-bot bots:status",
+    "bots:login": "pnpm --dir lingling-bot bots:login",
+    "login:lingling": "pnpm --dir lingling-bot docker:login",
+    "login:maibot": "pnpm --dir lingling-bot bots:login:maibot",
+    "logs:lingling": "pnpm --dir lingling-bot docker:logs",
+    "logs:maibot": "docker compose -f MaiBot/docker-compose.yml logs --tail 200 -f"
+  }
+}

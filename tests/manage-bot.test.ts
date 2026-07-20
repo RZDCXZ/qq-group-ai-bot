@@ -26,14 +26,14 @@ describe("机器人进程管理", () => {
       { pid: 202, command: "/usr/bin/node /tmp/other/dist/index.js" },
     ];
     const cwdByPid = new Map([
-      [101, "/project/qq-group-ai-bot"],
+      [101, "/project/lingling-bot"],
       [202, "/tmp/other"],
     ]);
 
     expect(
       selectProjectBotProcesses(
         processes,
-        "/project/qq-group-ai-bot",
+        "/project/lingling-bot",
         (pid) => cwdByPid.get(pid),
       ),
     ).toEqual([{ pid: 101, command: "node dist/index.js" }]);

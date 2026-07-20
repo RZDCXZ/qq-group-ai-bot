@@ -127,13 +127,68 @@ GROUP_REACTION_EMOJI_IDS=14,66,76
   模式还可能附带最多 4 条较早片段。不应让机器人处理密码、证件或其他敏感信息。
 ## 4. 日常启动顺序
 
-项目目录：`/Users/why/code/my-project/qq-group-ai-bot`。
+项目目录：`/Users/why/code/my-project/qq-bots/lingling-bot`。
 
-### 4.1 正常主号 QQ
+### 4.1 推荐方式：Docker Compose
+
+两个项目统一位于 `/Users/why/code/my-project/qq-bots/`。日常优先在该父目录一次管理：
+
+```bash
+cd /Users/why/code/my-project/qq-bots
+pnpm start
+pnpm status
+pnpm restart
+pnpm stop
+pnpm bots:login
+```
+
+`pnpm bots:login` 只为离线机器人刷新并打开二维码；可用 `pnpm login:lingling` 或
+`pnpm login:maibot` 单独处理。由于 `pnpm login` 是 pnpm 自己的账号登录命令，不能
+把它用作机器人登录命令。
+
+Docker Desktop 就绪后，在项目目录执行：
+
+```bash
+pnpm docker:start
+pnpm docker:status
+```
+
+这会启动 `lingling-bot-napcat` 与 `lingling-bot-core`。NapCat WebUI 为
+`http://127.0.0.1:17099/webui`，OneBot `napcat:3001` 只存在于 Docker 私有网络，
+不会映射到宿主机或局域网。查看日志：
+
+```bash
+pnpm docker:logs
+```
+
+首次登录或登录失效时不要打开日志中的 QQ 跳转链接，直接运行：
+
+```bash
+pnpm docker:login
+```
+
+该命令只重启铃铃酱 NapCat，等待新的二维码文件生成后在本机打开。二维码有效期较
+短，应立即扫码；核心会在小号上线后自动重连。
+
+若同级目录存在 MaiBot，可一次启动和检查两套机器人：
+
+```bash
+pnpm bots:start
+pnpm bots:status
+```
+
+Docker 核心使用 `.env.local`，并把宿主机 `~/.codex` 挂载为 Codex Home；不会把
+Codex 凭据、QQ 登录状态或 `.env.local` 写进镜像。QQ 登录状态保存在被 Git 忽略的
+`data/napcat/qq/`，NapCat 配置保存在 `data/napcat/config/`，主动互动状态仍保存在
+`data/group-engagement-state.json`。核心会只读挂载 QQ 数据目录，以兼容 NapCat
+返回的容器内图片路径。延年益寿归档仍落到宿主机
+`~/Pictures/daily-sese/`。
+
+### 4.2 正常主号 QQ
 
 从 Dock 或“应用程序”正常打开 QQ。磁盘上的 QQ 入口应始终保持原版，主号界面不依赖 NapCat。
 
-### 4.2 NapCat 小号
+### 4.3 备用方式：macOS 原生 NapCat 小号
 
 先检查是否已经存在 NapCat 小号进程；没有时在项目目录运行：
 
@@ -157,7 +212,7 @@ pnpm qq:verify-macos
 
 该检查会确认基础入口和当前热更新入口都已恢复为 QQ 原版，并检查瞬时注入加载器的恢复逻辑。不要手工编辑 QQ 的 `package.json`。
 
-### 4.3 Node 机器人
+### 4.4 备用方式：本机 Node 机器人
 
 首次安装或代码有改动时：
 
@@ -201,7 +256,28 @@ pnpm start:awake
 
 ## 5. 安全重启
 
-只修改 `.env.local` 不需要重新构建，但必须重启 Node 机器人；修改 `src/` 后必须先 `pnpm build`。
+Docker 部署的日常管理命令：
+
+```bash
+pnpm docker:status
+pnpm docker:restart
+pnpm docker:stop
+```
+
+同时管理麦麦和铃铃酱：
+
+```bash
+pnpm bots:status
+pnpm bots:restart
+pnpm bots:stop
+```
+
+`docker:stop`/`bots:stop` 会执行 Compose `down`，删除容器和网络，但不会删除
+`data/`、QQ 登录状态、NapCat 配置、Codex 登录或图片归档。Docker 模式不再需要
+保持终端窗口运行，但 Mac 进入系统睡眠后仍无法回复。
+
+只修改 `.env.local` 时需要重启核心；修改源码时 `pnpm docker:restart` 会重新构建
+镜像。备用的本机 Node 模式仍使用：
 
 日常直接使用项目命令：
 
@@ -211,7 +287,7 @@ pnpm stop
 pnpm restart
 ```
 
-`pnpm stop` 只关闭本项目的 Node AI 机器人，NapCat 小号继续在线；`pnpm restart`
+`pnpm stop` 只关闭本机 Node AI 进程，NapCat 小号继续在线；`pnpm restart`
 会先安全关闭旧实例，再像 `pnpm start` 一样在当前终端运行新实例。管理脚本同时
 核对进程命令与工作目录，不依赖模糊的 `pkill node`。
 
@@ -440,7 +516,7 @@ Node 日志显示群白名单数量正确、Codex 没有报错。
 ## 11. 新会话接手清单
 
 1. 阅读 `AGENTS.md`、本文件和 `docs/PERSONA.md`。
-2. 确认工作目录是 `/Users/why/code/my-project/qq-group-ai-bot`。
+2. 确认工作目录是 `/Users/why/code/my-project/qq-bots/lingling-bot`。
 3. 不打印 `.env.local`；通过 `loadConfig()` 读取并只输出 Codex 模型、推理等级、
    搜索开关、白名单数量、群聊参与参数和人设布尔检查。
 4. 检查正常 QQ、NapCat 小号和 Node 机器人是否仍在运行，避免重复启动。

@@ -1,0 +1,48 @@
+name: lingling-bot
+
+services:
+  core:
+    build:
+      context: .
+      args:
+        CODEX_CLI_VERSION: ${CODEX_CLI_VERSION:-0.144.5}
+    container_name: lingling-bot-core
+    restart: unless-stopped
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    env_file:
+      - .env.local
+    environment:
+      TZ: Asia/Shanghai
+      ONEBOT_WS_URL: ws://napcat:3001
+      CODEX_HOME: /var/lib/codex
+      DAILY_LONGEVITY_ARCHIVE_DIR: /archive/daily-sese
+    volumes:
+      - ./data:/app/data
+      - ./data/napcat/qq:/app/.config/QQ:ro
+      - ${HOME}/.codex:/var/lib/codex
+      - ${HOME}/Pictures/daily-sese:/archive/daily-sese
+    depends_on:
+      - napcat
+    networks:
+      - lingling_bot
+
+  napcat:
+    image: mlikiowa/napcat-docker:latest
+    container_name: lingling-bot-napcat
+    restart: unless-stopped
+    environment:
+      NAPCAT_UID: ${LOCAL_UID:-1000}
+      NAPCAT_GID: ${LOCAL_GID:-1000}
+      TZ: Asia/Shanghai
+      ACCOUNT: ${NAPCAT_QQ_ACCOUNT:?请在 .env.local 中填写 NAPCAT_QQ_ACCOUNT}
+    ports:
+      - "127.0.0.1:17099:6099"
+    volumes:
+      - ./data/napcat/config:/app/napcat/config
+      - ./data/napcat/qq:/app/.config/QQ
+    networks:
+      - lingling_bot
+
+networks:
+  lingling_bot:
+    driver: bridge
