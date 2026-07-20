@@ -2,6 +2,12 @@
 
 本文记录当前部署结果和可重复执行的维护流程。所有真实 QQ 号、群号和密钥只保存在 `.env.local` 或 NapCat 本地配置中，不在文档中出现。
 
+本机同时运行麦麦与铃铃酱时，端口、WebUI 地址、各类 Token 获取方法、电脑重启后的完整启动顺序和双机器人排障流程，统一记录在项目内副本：
+
+- [`docs/DUAL_BOT_OPERATIONS.md`](DUAL_BOT_OPERATIONS.md)
+
+该文件与 MaiBot 项目中的 `docs/local-dual-bot-coexistence.md` 保持一致；后续修改共存流程时需要同步两份文档。
+
 ## 1. 当前部署快照
 
 最后更新：2026-07-19。
