@@ -252,6 +252,12 @@ pnpm docker:logs
 pnpm docker:login
 ```
 
+日常只重建铃铃酱业务核心，保持 NapCat 和 QQ 登录进程不动：
+
+```bash
+pnpm docker:restart:core
+```
+
 停止或重启铃铃酱整套容器：
 
 ```bash
@@ -264,6 +270,7 @@ pnpm docker:restart
 ```bash
 pnpm bots:start
 pnpm bots:status
+pnpm bots:restart:core
 pnpm bots:stop
 ```
 
@@ -271,7 +278,8 @@ pnpm bots:stop
 `get_status` 显示麦麦与铃铃酱各自的真实 QQ 在线状态。容器运行不再等同于 QQ 在线。
 
 当前本机已把两个项目统一放在 `/Users/why/code/my-project/qq-bots/`，因此日常可直接
-在父目录运行 `pnpm start/status/restart/stop` 或 `pnpm bots:login`，不必先进入单个项目。
+在父目录运行 `pnpm start/status/restart:core/stop` 或 `pnpm bots:login`，不必先进入
+单个项目。整套 `pnpm restart` 会连同 NapCat 一起重建，只在 QQ 接入层也需要重建时使用。
 
 Docker 方式同时容器化铃铃酱核心和 NapCat，持久化 QQ 登录、主动互动状态和图片
 归档，并把宿主机 `~/.codex` 挂载到容器供 Codex 登录与图片生成使用。敏感配置不写入

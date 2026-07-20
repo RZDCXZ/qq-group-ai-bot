@@ -136,10 +136,15 @@ GROUP_REACTION_EMOJI_IDS=14,66,76
 cd /Users/why/code/my-project/qq-bots
 pnpm start
 pnpm status
+pnpm restart:core
 pnpm restart
 pnpm stop
 pnpm bots:login
 ```
+
+日常修改业务配置或代码后优先使用 `pnpm restart:core`。它只重建麦麦与铃铃酱的
+`core` 服务，两个 NapCat 容器和 QQ 登录进程保持不动。`pnpm restart` 会执行整套
+容器重建，仅在 NapCat 本身也需要重建时使用。
 
 `pnpm bots:login` 只为离线机器人刷新并打开二维码；可用 `pnpm login:lingling` 或
 `pnpm login:maibot` 单独处理。由于 `pnpm login` 是 pnpm 自己的账号登录命令，不能
@@ -263,6 +268,7 @@ Docker 部署的日常管理命令：
 
 ```bash
 pnpm docker:status
+pnpm docker:restart:core
 pnpm docker:restart
 pnpm docker:stop
 ```
@@ -271,16 +277,21 @@ pnpm docker:stop
 
 ```bash
 pnpm bots:status
+pnpm bots:restart:core
 pnpm bots:restart
 pnpm bots:stop
 ```
+
+`docker:restart:core` 只重建铃铃酱核心；`bots:restart:core` 只重建两套业务核心。
+两条命令都使用 `--no-deps`，不会停止或重建 NapCat，适合日常配置和业务代码更新。
+不带 `:core` 的重启会执行整套 Compose `down`/`up`。
 
 `docker:stop`/`bots:stop` 会执行 Compose `down`，删除容器和网络，但不会删除
 `data/`、QQ 登录状态、NapCat 配置、Codex 登录或图片归档。Docker 模式不再需要
 保持终端窗口运行，但 Mac 进入系统睡眠后仍无法回复。
 
-只修改 `.env.local` 时需要重启核心；修改源码时 `pnpm docker:restart` 会重新构建
-镜像。备用的本机 Node 模式仍使用：
+只修改 `.env.local` 或源码时使用 `pnpm docker:restart:core`；该命令会重新构建
+铃铃酱核心镜像。备用的本机 Node 模式仍使用：
 
 日常直接使用项目命令：
 

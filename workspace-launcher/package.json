@@ -6,6 +6,7 @@
     "start": "pnpm --dir lingling-bot bots:start",
     "stop": "pnpm --dir lingling-bot bots:stop",
     "restart": "pnpm --dir lingling-bot bots:restart",
+    "restart:core": "pnpm --dir lingling-bot bots:restart:core",
     "status": "pnpm --dir lingling-bot bots:status",
     "bots:login": "pnpm --dir lingling-bot bots:login",
     "login:lingling": "pnpm --dir lingling-bot docker:login",

@@ -19,8 +19,9 @@
 - 麦麦与铃铃酱可在本项目中使用 `pnpm bots:start/status/stop` 一次管理；两套
   Compose 使用不同容器、网络、账号和端口。
 - 两个项目的共同父目录是 `/Users/why/code/my-project/qq-bots/`；日常优先在父目录
-  使用 `pnpm start/status/restart/stop` 和 `pnpm bots:login`。`pnpm login` 属于 pnpm
-  内置命令，不是机器人登录命令。
+  使用 `pnpm start/status/restart:core/stop` 和 `pnpm bots:login`。`restart:core` 只重建
+  两个业务核心，不动 NapCat 和 QQ 登录进程；整套 `pnpm restart` 仅在 NapCat 也需要
+  重建时使用。`pnpm login` 属于 pnpm 内置命令，不是机器人登录命令。
 - AI 已切换为本机 Codex CLI，默认模型为 `gpt-5.6-luna`、推理深度为 `medium`；文字、实时搜索、识图和图片生成/编辑全部走 Codex。
 - 白名单好友私聊文字、图片均可正常回复。
 - 专用小号已经加入“杀鸡练习生测试”群，该群已进入白名单。
@@ -120,8 +121,9 @@ pnpm qq:verify-macos
   并重启，不能只改 `src/`。
 - 使用 `pnpm status`、`pnpm stop`、`pnpm restart` 管理 Node 机器人；`pnpm stop` 只停止 AI 回复，不停止普通 QQ 或 NapCat 小号。
 - 当前生产部署优先使用 `pnpm docker:start/status/logs/login/stop/restart`；需要一起管理
-  同级 MaiBot 时使用 `pnpm bots:start/status/stop/restart`。不要同时运行原生 Node
-  实例和 Docker 核心，否则会重复回复。
+  同级 MaiBot 时使用 `pnpm bots:start/status/stop/restart`。日常重启业务优先使用
+  `pnpm docker:restart:core`、`pnpm bots:restart:core` 或父目录的 `pnpm restart:core`，
+  避免重建 NapCat。不要同时运行原生 Node 实例和 Docker 核心，否则会重复回复。
 - 重启会清空内存中的对话历史，这是当前设计，不是数据丢失故障。
 
 ## 代码导航

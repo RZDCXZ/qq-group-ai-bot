@@ -10,9 +10,14 @@ Docker Desktop 就绪后，直接在本目录执行：
 ```bash
 pnpm start
 pnpm status
+pnpm restart:core
 pnpm restart
 pnpm stop
 ```
+
+日常修改配置或业务代码后优先使用 `pnpm restart:core`。它只重建麦麦和铃铃酱的
+业务核心，两个 NapCat 容器和 QQ 登录进程保持不动。`pnpm restart` 会重建整套容器，
+仅在 NapCat 本身也需要重建时使用。
 
 QQ 登录失效时：
 
