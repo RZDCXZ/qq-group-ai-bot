@@ -31,8 +31,8 @@ describe("parseConfig", () => {
     expect(config.groupParticipation).toEqual({
       enabled: true,
       minMessages: 3,
-      cooldownMs: 120_000,
-      probability: 0.3,
+      cooldownMs: 30_000,
+      probability: 0.55,
       contextMessages: 8,
       oldJokeMemoryMessages: 30,
     });

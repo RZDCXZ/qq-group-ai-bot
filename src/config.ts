@@ -181,11 +181,11 @@ const envSchema = z
     GROUP_PARTICIPATION_ENABLED: booleanFromEnv(true),
     GROUP_PARTICIPATION_MIN_MESSAGES: integerFromEnv(3, 1, 20),
     GROUP_PARTICIPATION_COOLDOWN_MS: integerFromEnv(
-      2 * 60 * 1_000,
+      30 * 1_000,
       10_000,
       24 * 60 * 60 * 1_000,
     ),
-    GROUP_PARTICIPATION_PROBABILITY: numberFromEnv(0.3, 0, 1),
+    GROUP_PARTICIPATION_PROBABILITY: numberFromEnv(0.55, 0, 1),
     GROUP_PARTICIPATION_CONTEXT_MESSAGES: integerFromEnv(8, 3, 30),
     GROUP_OLD_JOKE_MEMORY_MESSAGES: integerFromEnv(30, 8, 100),
     PROACTIVE_ENGAGEMENT_ENABLED: booleanFromEnv(true),
